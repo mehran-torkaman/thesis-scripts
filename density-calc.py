@@ -1,10 +1,12 @@
 import numpy as np
+import matplotlib.pyplot as plt
 #===========================================
 # Inputs
 #===========================================
 min_h = 0 #float(input('Enter your Minimum Height:'))
 max_h = 44 #float(input('Enter your Maximum Height:'))
 tickness = 0.25 #float(input('Enter your Bin Tickness:'))
+channel_materials = 'phosphorene'
 #============================================
 # Coordination OutPuts
 #============================================
@@ -51,3 +53,26 @@ for item in result:
 with open('Density.txt', 'w') as fout:
     for item in dens:
         fout.write("%s\n" % item)
+#====================
+# Plot Sides
+#====================
+x = list()
+y = list()
+
+for item in z:
+    x.append(item)
+
+for item in dens:
+    y.append(item)
+ticks = list()
+for i in range(min_h,max_h+2,2):
+    ticks.append(i)
+plt.style.use('fivethirtyeight')
+plt.plot(x,y,color='g',linestyle='-',marker='o',linewidth=2,label=channel_materials)
+plt.title('Density Profile for Channel 40A')
+plt.xlabel('Z (A)')
+plt.xticks(ticks)
+plt.ylabel('d (kg/m**3)')
+plt.legend(loc=2)
+plt.tight_layout()
+plt.show()
