@@ -31,7 +31,7 @@ min_h = 0
 max_h = 44
 tickness = 2
 channel_width = max_h-min_h
-file_numbers = channel_with/tickness
+file_numbers = int(channel_width/tickness)
 for file in range(file_numbers):
     file_name = str(file)
     angle = 'gamma'
