@@ -27,7 +27,12 @@ with open('gamma_averages') as bigfile:
 #=================
 # Plot Part
 #=================
-for file in range(22):
+min_h = 0
+max_h = 44
+tickness = 2
+channel_width = max_h-min_h
+file_numbers = channel_with/tickness
+for file in range(file_numbers):
     file_name = str(file)
     angle = 'gamma'
     dig_step = 5
