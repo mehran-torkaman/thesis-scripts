@@ -1,10 +1,9 @@
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
-import matplotlib.mlab as mlab
-from scipy.interpolate import make_interp_spline, BSpline
 from scipy.stats import norm
-from statistics import mean
 from math import sqrt
+from scipy.interpolate import make_interp_spline, BSpline
 from math import cos
 #=========================
 # split Z layers
@@ -52,45 +51,39 @@ for file in range(2,19):
     for i in range(0,181,dig_step):
         degrees.append(i)
     for j in range(len(data)):
-        if data[j][2] > int(data[j][2])+0.5:
-            numbers.append(int(data[j][2])+1)
-        else:
-            numbers.append(int(data[j][2]))
+        numbers.append(data[j][2])
 #**********************************
 # Calculate Standard Diviation
 #**********************************
-    plot = list()
+    total = list()
     for i in range(len(numbers)):
-        tick = numbers[i]
-        for j in range(tick):
-            plot.append(degrees[i])
-    if len(plot)==0:
+        total.append(numbers[i]*degrees[i])
+    if sum(numbers)==0:
         mu = 0
     else:
-        mu=sum(plot)/len(plot)
+        mu=sum(total)/sum(numbers)
     deg_averages.append(mu)
     div = list()
-    for item in plot:
+    for item in degrees:
         div.append((item-mu)**2)
     summ = sum(div)
-    if len(plot)==0:
-        sumation = 0
-    else:
-        sumation = summ/len(plot)
+    sumation = summ/len(degrees)
     sigma = sqrt(sumation)
 #**********************************
     plt.style.use('fivethirtyeight')
     ticks=list()
     for j in range(0,181,10):
         ticks.append(j)
+    df = pd.DataFrame({'Deg':degrees, 'Num':numbers})
     plt.figure(figsize=(14,8))
-    plt.hist(plot,bins=degrees,density=True, alpha=0.8,color='g',edgecolor='black')
+    plt.hist(df.Deg, bins=36, weights=df.Num,density=True, alpha=0.8,color='g',edgecolor='black')
     xmin, xmax = plt.xlim()
     x = np.linspace(xmin, xmax, 100)
     p = norm.pdf(x, mu, sigma)
     plt.plot(x, p, 'r--', linewidth=2,label='layer'+str(layer_num))
-    plt.title('Distributions Of the Dipole Moment Orientation')
+    plt.title('Histogram of Dipoles Orientation: $\mu=%.2f, \sigma=%.2f$' % (mu,sigma))
     plt.xlabel('Dipole Moment Orientation Angle(%s)' % angle)
+    plt.ylabel('Probability Density')
     plt.legend(loc=2)
     plt.xticks(ticks)
     plt.grid(True)
@@ -117,5 +110,3 @@ plt.xticks(ticks)
 plt.title('second_Legendre')
 plt.legend(loc=3)
 plt.savefig('second_Legendre.png')
-#print(second_Legendre)
-#print(layer)
